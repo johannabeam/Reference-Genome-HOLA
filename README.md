@@ -20,8 +20,19 @@ Align the Hi-C data to the contigs (chromap - map Hi-C short reads). Output the 
 
 **FCS-adaptor** (from NCBI) - will look for contamination sequences in your assembly (will also look for mt genome as well as species that are not your study species). And remove any mt contigs because you'll assemble that later, and flag NUMTs. You can add it back in after curation. 
 
-**Curation pretext** (from Sanger - a nextflow pipeline)
+**Curation pretext** (from Sanger - a nextflow pipeline) This is the program that requires having a computer mouse. 
+Give it both assemblies (cat one fasta haplo onto the other haplo)
 You've run yahs, you've removed contamination already. This will create all the tracts you will need for manual curation. Use the DToL naming system. So something like bEreAlp1 for bird, species name, and 1 for the first assembly. (or 2 because this is the second assembly!
 This will generate gaps, repeat files, telemere file, and all the other files needed for manual curation. 
 
 For manual curation, you can now curate both haplos at the same time. 
+
+## Sex chromosomes
+Use the same cat'd haplos for running nucmer. Also rename the reference species' chromosomes so that they look nice and clean (1, 2, Z, etc). Query is haplotypes. Reference is reference. 
+Run some nucmer alignments from the yahs to identify the sex chromosomes (use, potentially, synteny from the zebra finch). Z chrom can be easy (use coverge tracks), but W will likely be super fragmented because it is chock full of repeats. For nucmer, do zebra finch, gallus, BARS, GRTI, and HOSP for HOLA. And potentially also run one with the existing HOLA reference. 
+nucmer -p genome_aligning_to merged haplo 
+Gives you delta file, and use as input for py script (dot script). Takes delta and makes new .coords file. Gives .coords and coords.idx. Go to dot.sandbox.bio. Load your coords and coords.idx into the website. 
+
+**MicroFinder** script for birds. Uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
+
+For an experienced curator, manual curation can take 3 days. An unexperienced curator might take ... a month. :) 
