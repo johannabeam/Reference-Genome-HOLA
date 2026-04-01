@@ -1,4 +1,5 @@
 # Reference-Genome-HOLA
+https://evomics.org/2026-workshop-on-genomics/
 
 Need CRAM (unaligned) for Hi-C (and maybe pacbio)
 ## Step One
