@@ -49,3 +49,12 @@ Gives you delta file, and use as input for py script (dot script). Takes delta a
 
 For an experienced curator, manual curation can take 3 days. An unexperienced curator might take ... a month. :) 
 
+## Annotation
+Sample |	Raw reads |	Raw data	| Effective(%)	| Error(%)	| Q20(%) | Q30(%) | GC(%)
+--- | --- | --- | --- | --- | --- | --- | --- |
+HOLA_Ovary	| 85245630	| 12.8	| 96.67	| 0.01	| 99.07	| 96.19	| 46.74
+HOLA_Liver	| 48341108	| 7.3	| 96.66	| 0.01	| 99.12	| 96.88	| 47.83
+HOLA_Brain	| 44711556	| 6.7	| 97.43	| 0.01	| 99.13	| 96.87 | 	46.54
+HOLA_Heart	| 60171752	| 9.0	| 98.29	| 0.01	| 99.14	| 96.89	| 48.49
+HOLA_Kidney	| 51810156	| 7.8	| 97.34	| 0.01	| 99.11	| 96.80	| 47.95
+
