@@ -2,6 +2,17 @@
 https://evomics.org/2026-workshop-on-genomics/
 
 Need CRAM (unaligned) for Hi-C (and maybe pacbio)
+
+PacBio: 50-60Gb - save also as unaligned CRAM
+Nanopore: 100-500Gb 
+Hi-C: 120-130Gb
+
+Sample | Total Bases (G) | Read_Number |	Read_length(max) |Read_length(mean)	| Read_length(N50)
+--- | --- | --- | --- | --- | --- |
+HOLA003 (PacBio) | 118.8 | 6,165,499	| 64,292 | 19,273	| 20,579 |
+
+<img width="2100" height="1499" alt="HOLA003 HiFi_reads_frq" src="https://github.com/user-attachments/assets/a8a8bef5-ff48-43f7-b9db-a7e4629b2ac7" />
+
 ## Step One
 Run hifiasm with the Hi-C, pacbio, and UL data 
 ```
@@ -37,3 +48,4 @@ Gives you delta file, and use as input for py script (dot script). Takes delta a
 **MicroFinder** script for birds. Uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
 
 For an experienced curator, manual curation can take 3 days. An unexperienced curator might take ... a month. :) 
+
