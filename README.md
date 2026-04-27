@@ -10,7 +10,7 @@ Hi-C: 120-130Gb
 ## Long- read data stats
 Sample | Total Bases (G) | Read_Number |	Read_length(max) |Read_length(mean)	| Read_length(N50) |  Read_mean_quality | Read_quality > Q7 (%) | Read_quality > Q7 (%) |
 |--- | --- | --- | --- | --- | --- | --- | --- | --- |
-HOLA001 (Nanopore) | 41.33235549 | 1,516,770 |  | 27,250.2 | 51,200 | 9.7 | 80.60% | 71.10% |
+HOLA001 (Nanopore) | 41.3| 1,516,770 |  | 27,250.2 | 51,200 | 9.7 | 80.60% | 71.10% |
 HOLA003 (PacBio) | 118.8 | 6,165,499	| 64,292 | 19,273	| 20,579 |   |  |  |
 
 ## Hi-C data stats 
