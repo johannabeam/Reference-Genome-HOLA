@@ -13,6 +13,13 @@ Sample | Total Bases (G) | Read_Number |	Read_length(max) |Read_length(mean)	| R
 HOLA002 (Nanopore) | 41.3| 1,516,770 |  | 27,250.2 | 51,200 | 9.7 | 80.60% | 71.10% |
 HOLA003 (PacBio) | 118.8 | 6,165,499	| 64,292 | 19,273	| 20,579 |   |  |  |
 
+### PacBio distrubution
+<img width="2100" height="1499" alt="HOLA003 HiFi_reads_frq" src="https://github.com/user-attachments/assets/a8a8bef5-ff48-43f7-b9db-a7e4629b2ac7" />
+
+### Nanopore distribution
+<img width="600" height="600" alt="newplot (2)" src="https://github.com/user-attachments/assets/29b6859c-6b06-40c8-8e32-28fdfe31c492" />
+
+
 ## Hi-C data stats 
 
 Sample name	| library name	| Raw paired reads	| Raw Base(bp)	| Duplication rate(%)	| Effective Rate(%)	| Error Rate(%)	| Q20(%)	| Q30(%)	| GC Content(%) |
@@ -20,8 +27,6 @@ Sample name	| library name	| Raw paired reads	| Raw Base(bp)	| Duplication rate(
 HOLA_001	| FKDL260057058-1a_L1	| 15,010,383	| 4,503,114,900	| 29.61	| 66.70	| 0.01	| 99.05	| 96.00	| 41.18 |
 HOLA_001	| FKDL260057058-1a_L2	| 289,650,255 |	86,895,076,500 |56.10	| 40.94	| 0.01	| 97.99	| 92.61	| 41.43 |
 HOLA_001	| FKDL260057058-1a_L3 |	52,070,338	| 15,621,101,400	| 42.31	| 54.59	| 0.01 |	98.84 |	95.61 |	41.25 |
-
-<img width="2100" height="1499" alt="HOLA003 HiFi_reads_frq" src="https://github.com/user-attachments/assets/a8a8bef5-ff48-43f7-b9db-a7e4629b2ac7" />
 
 ## Step One
 Run hifiasm with the Hi-C, pacbio, and UL data 
