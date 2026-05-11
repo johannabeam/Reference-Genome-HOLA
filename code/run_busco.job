@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p amilan
+#SBATCH --qos=normal
+#SBATCH --account=csu116_alpine1
+#SBATCH --mail-type=end
+#SBATCH --mail-user=c838062464@colostate.edu
+#SBATCH --job-name=busco_HOLA_hap1
+#SBATCH --output=/projects/c838062464@colostate.edu/code/HOLA-genoscape/busco_HOLA_hap1.out
+#SBATCH --error=/projects/c838062464@colostate.edu/code/HOLA-genoscape/busco_HOLA_hap1.err
+
+module load miniforge
+mamba activate busco
+
+export HAP_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly
+export OUTPUT_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/busco
+mkdir -p $OUTPUT_DIR
+
+busco -i $HAP_DIR/HOLA_hap1.fa \
+-m genome \
+-l aves_odb10 \
+-c 16 \
+--out_path $OUTPUT_DIR \
+-o HOLA_hap1_busco

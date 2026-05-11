@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p amilan
+#SBATCH --qos=normal
+#SBATCH --account=csu116_alpine1
+#SBATCH --mail-type=end
+#SBATCH --mail-user=c838062464@colostate.edu
+#SBATCH --job-name=quast_HOLA
+#SBATCH --output=/projects/c838062464@colostate.edu/code/HOLA-genoscape/quast_HOLA.out
+#SBATCH --error=/projects/c838062464@colostate.edu/code/HOLA-genoscape/quast_HOLA.err
+
+module load miniforge
+mamba activate assembly
+
+export HAP_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly
+export OUTPUT_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/quast
+mkdir -p $OUTPUT_DIR
+
+quast $HAP_DIR/HOLA_hap1.fa \
+           $HAP_DIR/HOLA_hap2.fa \
+        --large \
+        -e \
+        -t 16 \
+        -o $OUTPUT_DIR

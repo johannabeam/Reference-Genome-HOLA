@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH --get-user-env
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=256G
+#SBATCH --time=24:00:00
+#SBATCH -p amem
+#SBATCH --qos=mem-normal
+#SBATCH --account=csu116_alpine1
+#SBATCH --mail-type=end
+#SBATCH --mail-user=c838062464@colostate.edu
+#SBATCH --job-name=hifiasm_HOLA_highmem
+#SBATCH --output=/projects/c838062464@colostate.edu/code/HOLA-genoscape/HOLA_hifiasm.out
+#SBATCH --error=/projects/c838062464@colostate.edu/code/HOLA-genoscape/HOLA_hifiasm.err
+
+export RAW_HiC=/scratch/alpine/c838062464@colostate.edu/HOLA/ref_raw_data/clean_data/HOLA_001
+export RAW_UL=/scratch/alpine/c838062464@colostate.edu/HOLA/ref_raw_data/Data-X202SC26024927-Z02-F001/HOLA002/HOLA002_fastq_pass
+export RAW_PB=/scratch/alpine/c838062464@colostate.edu/HOLA/ref_raw_data/rawdata/Data-X202SC26024927-Z01-F001/HOLA003/Sequel-Revio/FPAC260157265-1A
+export OUTPUT_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly
+mkdir -p $OUTPUT_DIR
+
+# Verify files exist before running
+ls -lh $RAW_PB/HOLA003.hifi_reads.fastq.gz || { echo "fastq not found"; exit 1; }
+ls -lh $RAW_UL/HOLA_002.fastq.gz || { echo "UL not found"; exit 1; }
+ls -lh $RAW_HiC/HOLA_001_L1_1.clean.rd.fq.gz || { echo "HiC not found"; exit 1; }
+
+/projects/c838062464@colostate.edu/hifiasm/hifiasm -o $OUTPUT_DIR/HOLA001_amem.asm -t 32 \
+    --h1 $RAW_HiC/HOLA_001_L1_1.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L2_1.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L3_1.clean.rd.fq.gz \
+    --h2 $RAW_HiC/HOLA_001_L1_2.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L2_2.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L3_2.clean.rd.fq.gz \
+    --ul $RAW_UL/HOLA_002.fastq.gz \
+    $RAW_PB/HOLA003.hifi_reads.fastq.gz
