@@ -1,0 +1,23 @@
+﻿Assembly,HOLA_hap1,HOLA_hap2
+# contigs (>= 0 bp),87,86
+# contigs (>= 1000 bp),87,86
+# contigs (>= 5000 bp),87,86
+# contigs (>= 10000 bp),87,86
+# contigs (>= 25000 bp),84,86
+# contigs (>= 50000 bp),76,84
+Total length (>= 0 bp),1096132338,1155346390
+Total length (>= 1000 bp),1096132338,1155346390
+Total length (>= 5000 bp),1096132338,1155346390
+Total length (>= 10000 bp),1096132338,1155346390
+Total length (>= 25000 bp),1096068333,1155346390
+Total length (>= 50000 bp),1095747225,1155283198
+# contigs,87,86
+Largest contig,116083011,244763053
+Total length,1096132338,1155346390
+GC (%),43.71,43.42
+N50,38276453,40767089
+N90,7662629,7905943
+auN,46939619.6,80781936.8
+L50,9,7
+L90,35,33
+# N's per 100 kbp,0,0
