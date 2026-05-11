@@ -41,6 +41,29 @@ Make K-mer plots - estimated genome size (genomescope2), heterozyg, and duplicat
 Quast - py script to run on the assembly - gives N50, bases, etc
 BUSCO - against the bird dataset - see duplications, completeness with the genes
 
+    -------------------------------------------------------------------------------------------
+    |Results from Haplotype1 aves_odb10                                                        |
+    -------------------------------------------------------------------------------------------
+    |C:95.0%[S:94.7%,D:0.3%],F:0.1%,M:4.9%,n:8338,E:10.7%                                      |
+    |7925    Complete BUSCOs (C)    (of which 846 contain internal stop codons)                |
+    |7897    Complete and single-copy BUSCOs (S)                                               |
+    |28    Complete and duplicated BUSCOs (D)                                                  |
+    |8    Fragmented BUSCOs (F)                                                                |
+    |405    Missing BUSCOs (M)                                                                 |
+    |8338    Total BUSCO groups searched                                                       |
+    -------------------------------------------------------------------------------------------
+
+    -------------------------------------------------------------------------------------------
+    |Results from Haplotype2 aves_odb10                                                        |
+    -------------------------------------------------------------------------------------------
+    |C:99.5%[S:99.1%,D:0.4%],F:0.0%,M:0.5%,n:8338,E:10.4%                                      |
+    |8293    Complete BUSCOs (C)    (of which 866 contain internal stop codons)                |
+    |8261    Complete and single-copy BUSCOs (S)                                               |
+    |32    Complete and duplicated BUSCOs (D)                                                  |
+    |1    Fragmented BUSCOs (F)                                                                |
+    |44    Missing BUSCOs (M)                                                                  |
+    |8338    Total BUSCO groups searched                                                       |
+    -------------------------------------------------------------------------------------------
 ## Hi-C scaffolding
 
 Align the Hi-C data to the contigs (chromap - map Hi-C short reads). Output the bed. Include the -q 0 option to have all the contacts, not just the high quality ones. This is used as the input for yahs. Run yahs to get the scaffolds now (your contig/scaffold number will decrease now that you have scaffolded, particularly for haplotype1). Yahs uses Hi-C and will introduce gaps (Ns) into your files. It starts the manual curation process so that you don't have to do as much in the  later steps. 
