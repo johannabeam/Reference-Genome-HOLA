@@ -1,0 +1,23 @@
+Assembly	HOLA_hap1_scaffolds_final	HOLA_hap2_scaffolds_final
+# contigs (>= 0 bp)	102	99
+# contigs (>= 1000 bp)	102	99
+# contigs (>= 5000 bp)	102	99
+# contigs (>= 10000 bp)	102	99
+# contigs (>= 25000 bp)	99	99
+# contigs (>= 50000 bp)	91	96
+Total length (>= 0 bp)	1096132838	1155346390
+Total length (>= 1000 bp)	1096132838	1155346390
+Total length (>= 5000 bp)	1096132838	1155346390
+Total length (>= 10000 bp)	1096132838	1155346390
+Total length (>= 25000 bp)	1096068833	1155346390
+Total length (>= 50000 bp)	1095747725	1155234785
+# contigs	102	99
+Largest contig	116083011	244763053
+Total length	1096132838	1155346390
+GC (%)	43.71	43.42
+N50	38276453	38832000
+N90	7605000	7133672
+auN	46542300.3	80244018.3
+L50	9	7
+L90	36	34
+# N's per 100 kbp	0.05	0.00
