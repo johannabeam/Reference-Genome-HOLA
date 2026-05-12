@@ -395,7 +395,27 @@ In the end, Camilla made the final fastas for us. They can be found in the Googl
 | KP_hap2.final.primary.curated.fa   | XX | curated scaffold file + scaffolds not present concatenated and final fasta file  |
 
 
+## how to run juicer:
 
+```
+#!/bin/bash
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -q workq
+
+BAM=/cluster_data/home/genomic/zygaena/assembly/scaffolding/chromap/output/ZyTra.HiFi.asm.p_ctg.fa.pol.purged.bam
+AGP=/cluster_data/home/genomic/zygaena/assembly/scaffolding/yahs/output/10k.correction/yahs.out_scaffolds_final.agp
+REF=/cluster_data/home/genomic/zygaena/assembly/assembly_versions/hifiasm/run4/polished/1run/purged/ZyTra.HiFi.asm.p_ctg.fa.PolcaCorrected.purged.fa
+SD1=/cluster_data/home/genomic/software/yahs
+SD2=/cluster_data/home/genomic/software/juicertools
+WD=/cluster_data/home/genomic/zygaena/assembly/scaffolding/yahs/output/10k.correction/juicer
+
+#mkdir -p $WD
+cd $WD
+
+$SD2/juicer pre -a -o out_JBAT $BAM $AGP $REF.fai > out_JBAT.log 2>&1
+
+(java -jar -Xmx70G $SD2/juicer_tools.1.9.9_jcuda.0.8.jar pre out_JBAT.txt out_JBAT.hic.part <(cat out_JBAT.log | grep PRE_C_SIZE | awk '{print $2" "$3}')) && (mv out_JBAT.hic.part out_JBAT.hic)
+```
 
 
 
