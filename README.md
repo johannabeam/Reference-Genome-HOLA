@@ -70,7 +70,7 @@ Align the Hi-C data to the contigs (chromap - map Hi-C short reads). Output the 
 
 **Juicer** - creates contact maps plots for looking at genomes
 
-**FCS-adaptor** (from NCBI) - will look for contamination sequences in your assembly (will also look for mt genome as well as species that are not your study species). And remove any mt contigs because you'll assemble that later, and flag NUMTs. You can add it back in after curation. 
+**FCS-gx** (from NCBI) - will look for contamination sequences in your assembly (will also look for mt genome as well as species that are not your study species). And remove any mt contigs because you'll assemble that later, and flag NUMTs. You can add it back in after curation. 
 
 **Curation pretext** (from Sanger - a nextflow pipeline) This is the program that requires having a computer mouse. 
 Give it both assemblies (cat one fasta haplo onto the other haplo)
