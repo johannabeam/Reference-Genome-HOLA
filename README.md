@@ -72,6 +72,10 @@ Make your unaligned crams for each lane
 ```
 samtools import -@12 -r ID:HiC -r CN:Novogene -r PU:L3 -r SM:HOLA HOLA_001_L3_1.clean.rd.fq.gz HOLA_001_L3_2.clean.rd.fq.gz -o HiC_L3_unaligned.cram
 ```
+To merge the cram files: 
+```
+samtools cat -o HiC_merged_HOLA.cram HiC_L1_unaligned.cram HiC_L2_unaligned.cram HiC_L3_unaligned.cram
+```
 
 **Juicer** - creates contact maps plots for looking at genomes
 
