@@ -68,6 +68,11 @@ BUSCO - against the bird dataset - see duplications, completeness with the genes
 
 Align the Hi-C data to the contigs (chromap - map Hi-C short reads). Output the bed. Include the -q 0 option to have all the contacts, not just the high quality ones. This is used as the input for yahs. Run yahs to get the scaffolds now (your contig/scaffold number will decrease now that you have scaffolded, particularly for haplotype1). Yahs uses Hi-C and will introduce gaps (Ns) into your files. It starts the manual curation process so that you don't have to do as much in the  later steps. 
 
+Make your unaligned crams for each lane
+```
+samtools import -@12 -r ID:HiC -r CN:Novogene -r PU:L3 -r SM:HOLA HOLA_001_L3_1.clean.rd.fq.gz HOLA_001_L3_2.clean.rd.fq.gz -o HiC_L3_unaligned.cram
+```
+
 **Juicer** - creates contact maps plots for looking at genomes
 
 **FCS-gx** (from NCBI) - will look for contamination sequences in your assembly (will also look for mt genome as well as species that are not your study species). And remove any mt contigs because you'll assemble that later, and flag NUMTs. You can add it back in after curation. 
