@@ -33,7 +33,11 @@ Run hifiasm with the Hi-C, pacbio, and UL data
 ```
 hifiasm -o NA12878.asm -t32 --ul ul.fq.gz --h1 read1.fq.gz --h2 read2.fq.gz HiFi-reads.fq.gz
 ```
-
+Transform your gfas into fas:
+```
+awk '/^S/{print ">"$2"\n"$3}' HOLA001_amem.asm.hic.hap1.p_ctg.gfa > HOLA_hap1.fa
+awk '/^S/{print ">"$2"\n"$3}' HOLA001_amem.asm.hic.hap2.p_ctg.gfa > HOLA_hap2.fa
+```
 Make K-mer plots - estimated genome size (genomescope2), heterozyg, and duplication rates. Check that the haplotypes made are of simialr size and have similar numbers of contigs/N50, etc. 
 
 [Genomescope plots link](http://genomescope.org/genomescope2.0/analysis.php?code=yR2k1uRZyKFHM3er60Og)
