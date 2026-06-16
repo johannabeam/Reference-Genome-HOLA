@@ -58,6 +58,18 @@ BUSCO - against the bird dataset - see duplications, completeness with the genes
     |405    Missing BUSCOs (M)                                                                 |
     |8338    Total BUSCO groups searched                                                       |
     -------------------------------------------------------------------------------------------
+    
+    -------------------------------------------------------------------------------------------
+    |Results from dataset Hap2_newHiC aves_odb10                                                           |
+    -------------------------------------------------------------------------------------------
+    |C:95.0%[S:94.7%,D:0.3%],F:0.1%,M:4.9%,n:8338,E:10.7%                                      |
+    |7925    Complete BUSCOs (C)    (of which 845 contain internal stop codons)                |
+    |7897    Complete and single-copy BUSCOs (S)                                               |
+    |28    Complete and duplicated BUSCOs (D)                                                  |
+    |8    Fragmented BUSCOs (F)                                                                |
+    |405    Missing BUSCOs (M)                                                                 |
+    |8338    Total BUSCO groups searched                                                       |
+    -------------------------------------------------------------------------------------------
 
     -------------------------------------------------------------------------------------------
     |Results from Haplotype2 aves_odb10                                                        |
@@ -68,6 +80,18 @@ BUSCO - against the bird dataset - see duplications, completeness with the genes
     |32    Complete and duplicated BUSCOs (D)                                                  |
     |1    Fragmented BUSCOs (F)                                                                |
     |44    Missing BUSCOs (M)                                                                  |
+    |8338    Total BUSCO groups searched                                                       |
+    -------------------------------------------------------------------------------------------
+
+        -------------------------------------------------------------------------------------------
+    |Results from dataset Hap1_allHiC aves_odb10                                                           |
+    -------------------------------------------------------------------------------------------
+    |C:99.5%[S:99.1%,D:0.4%],F:0.0%,M:0.5%,n:8338,E:10.4%                                      |
+    |8294    Complete BUSCOs (C)    (of which 866 contain internal stop codons)                |
+    |8264    Complete and single-copy BUSCOs (S)                                               |
+    |30    Complete and duplicated BUSCOs (D)                                                  |
+    |1    Fragmented BUSCOs (F)                                                                |
+    |43    Missing BUSCOs (M)                                                                  |
     |8338    Total BUSCO groups searched                                                       |
     -------------------------------------------------------------------------------------------
 ## Hi-C scaffolding
