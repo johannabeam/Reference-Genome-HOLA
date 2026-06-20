@@ -118,6 +118,11 @@ This will generate gaps, repeat files, telemere file, and all the other files ne
 
 For manual curation, you can now curate both haplos at the same time. 
 
+Take bams and turn them into fasta
+```
+samtools fasta -@8 input.hifi_reads.bam | gzip > HOLA003_hifi.fasta.gz
+```
+
 ## Sex chromosomes
 Use the same cat'd haplos for running nucmer. Also rename the reference species' chromosomes so that they look nice and clean (1, 2, Z, etc). Query is haplotypes. Reference is reference. 
 Run some nucmer alignments from the yahs to identify the sex chromosomes (use, potentially, synteny from the zebra finch). Z chrom can be easy (use coverge tracks), but W will likely be super fragmented because it is chock full of repeats. For nucmer, do zebra finch, gallus, BARS, GRTI, and HOSP for HOLA. And potentially also run one with the existing HOLA reference. 
