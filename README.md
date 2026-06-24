@@ -133,6 +133,12 @@ Gives you delta file, and use as input for py script (dot script). Takes delta a
 
 For an experienced curator, manual curation can take 3 days. An unexperienced curator might take ... a month. :) 
 
+
+**Mitochondrial**
+mitoHiFi for finding the mt genome!
+
+
+
 ## Annotation
 Sample |	Raw reads |	Raw data	| Effective(%)	| Error(%)	| Q20(%) | Q30(%) | GC(%)
 --- | --- | --- | --- | --- | --- | --- | --- |
