@@ -140,6 +140,10 @@ mitoHiFi for finding the mt genome!
 
 
 ## Annotation
+Braker4 for doing the rna seq annotations. Test it on the test data?
+Repeat annotation - earl grey - 
+
+
 Sample |	Raw reads |	Raw data	| Effective(%)	| Error(%)	| Q20(%) | Q30(%) | GC(%)
 --- | --- | --- | --- | --- | --- | --- | --- |
 HOLA_Ovary	| 85245630	| 12.8	| 96.67	| 0.01	| 99.07	| 96.19	| 46.74
