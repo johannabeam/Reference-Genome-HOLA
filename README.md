@@ -118,10 +118,13 @@ This will generate gaps, repeat files, telemere file, and all the other files ne
 
 For manual curation, you can now curate both haplos at the same time. 
 
+Curation pretext using HiFi in fasta format:
 Take bams and turn them into fasta
 ```
 samtools fasta -@8 input.hifi_reads.bam | gzip > HOLA003_hifi.fasta.gz
 ```
+And takes the Hi-C in cram format (and needs the indexed crai as well).
+
 
 ## Sex chromosomes
 Use the same cat'd haplos for running nucmer. Also rename the reference species' chromosomes so that they look nice and clean (1, 2, Z, etc). Query is haplotypes. Reference is reference. 
