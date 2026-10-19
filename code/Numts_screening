@@ -16,17 +16,42 @@ zcat pri_mito_common_reads.tsv.gz > pri_mito_common_reads.txt
 zcat alt_mito_common_reads.tsv.gz > alt_mito_common_reads.txt
 
 ## 3. pull those reads out of the HiFi fastq
-seqtk subseq allpacbio.fastq.gz pri_mito_common_reads.txt > pri_mito_common_reads.fq
-seqtk subseq allpacbio.fastq.gz alt_mito_common_reads.txt > alt_mito_common_reads.fq
+seqtk subseq HOLA003.hifi_reads.fastq pri_mito_common_reads.txt > pri_mito_common_reads.fq
+seqtk subseq HOLA003.hifi_reads.fastq alt_mito_common_reads.txt > alt_mito_common_reads.fq
 
 ## 4. re-align the shared reads to each haplotype to locate the NUMTs (-> pri_numt.bed / alt_numt.bed, data/)
-minimap2 --secondary=no -ax map-hifi KP_hap1.final.primary.curated.fa   pri_mito_common_reads.fq > pri_numt_reads.sam
-minimap2 --secondary=no -ax map-hifi KP_hap2.final.alternate.curated.fa alt_mito_common_reads.fq > alt_numt_reads.sam
+minimap2 --secondary=no -ax map-hifi bEreAlp2_v5_2209.hap1.1.primary.curated.fa   pri_mito_common_reads.fq > pri_numt_reads.sam
+minimap2 --secondary=no -ax map-hifi bEreAlp2_v5_2209.hap2.1.primary.curated.fa alt_mito_common_reads.fq > alt_numt_reads.sam
 samtools sort -o pri_numt.sorted.bam pri_numt_reads.sam && samtools index pri_numt.sorted.bam
 samtools sort -o alt_numt.sorted.bam alt_numt_reads.sam && samtools index alt_numt.sorted.bam
 bedtools bamtobed -i pri_numt.sorted.bam > pri_numt.bed
 bedtools bamtobed -i alt_numt.sorted.bam > alt_numt.bed
 
 ## 5. reads judged to be NUMT-derived (data/NUMT_reads_removed_before_mitohifi.txt, n = 15) were removed
-##    from the HiFi read set before the final MitoHiFi run:
-##    seqkit grep -v -f NUMTs_to_remove.txt allpacbio.fastq.gz -o no_NUMTs.fastq.gz     # (exact tool not recorded)
+# all candidates, both haplotypes
+cat pri_mito_common_reads.txt alt_mito_common_reads.txt | sort -u > candidates.txt
+seqtk subseq HOLA003.hifi_reads.fastq candidates.txt > candidates.fq
+
+minimap2 -x map-hifi --secondary=no /scratch/alpine/c838062464@colostate.edu/HOLA/assembly/mitofinder/bEreAlp2/HOLA_mitochondria_NC_048470.fasta candidates.fq > cand_vs_mito.paf
+cat KP_hap1.final.primary.curated.fa KP_hap2.final.alternate.curated.fa > both_haps.fa
+minimap2 -x map-hifi --secondary=no both_haps.fa candidates.fq > cand_vs_nuc.paf
+
+# per read: read length, fraction of read aligned, alignment identity, largest target contig length
+summarize() {
+  awk 'BEGIN{OFS="\t"}
+       {len[$1]=$2; cov[$1]+=$4-$3; m[$1]+=$10; a[$1]+=$11; if($7>t[$1]) t[$1]=$7}
+       END{for(r in len){c=cov[r]/len[r]; if(c>1)c=1
+           print r, len[r], sprintf("%.3f",c), sprintf("%.4f",m[r]/a[r]), t[r]}}' "$1" | sort -k1,1
+}
+summarize cand_vs_mito.paf > mito.tsv
+summarize cand_vs_nuc.paf  > nuc.tsv
+
+# columns: read, readlen, mito_frac, mito_id, nuc_frac, nuc_id, nuc_contig_len
+join -t $'\t' mito.tsv nuc.tsv | cut -f1-4,7-9 > candidate_table.tsv
+
+# Finally remove the candidate numts from the fastq file before re-running mitoHiFi
+seqkit grep -v -f NUMTs_to_remove.txt allpacbio.fastq.gz -o no_NUMTs.fastq.gz  
+
+
+
+seqkit seq -n -i allpacbio.fastq.gz | head -3
