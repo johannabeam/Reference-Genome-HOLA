@@ -30,8 +30,14 @@ HOLA_001	| FKDL260057058-1a_L3 |	52,070,338	| 15,621,101,400	| 42.31	| 54.59	| 0
 HOLA_001    | FKDL260057058-1a_L4 | 300,549,292 | 90,164,787,600 | 55.24 | 41.41 | 0.01 | 98.06 | 93.00 | 41.41 |
 HOLA_001    | FKDL260057058-1a_L5 | 52,225,220 | 15,667,566,000 | 35.40 | 61.01 | 0.01 | 98.75	| 94.84 | 41.22 |
 
-## Step One
-Run hifiasm with the Hi-C, pacbio, and UL data 
+## Start here!
+Below are all of the steps used in generating the new Horned Lark reference genome. All of the code/jobs run are in the code directory. Note that some jobs will be run more than once (BUSCO, quast, nucmer) so the numbering on each job script is not perfect, but will generally give you the steps in order. 
+
+
+### 01_run_hifiasm.job
+Run hifiasm with the Hi-C, PacBio, and ultra-long reads data. 
+
+Below is the basic formula for running hifiasm, but the job I wrote and used is in the code folder. 
 ```
 hifiasm -o NA12878.asm -t32 --ul ul.fq.gz --h1 read1.fq.gz --h2 read2.fq.gz HiFi-reads.fq.gz
 ```
@@ -40,63 +46,27 @@ Transform your gfas into fas:
 awk '/^S/{print ">"$2"\n"$3}' HOLA001_amem.asm.hic.hap1.p_ctg.gfa > HOLA_hap1.fa
 awk '/^S/{print ">"$2"\n"$3}' HOLA001_amem.asm.hic.hap2.p_ctg.gfa > HOLA_hap2.fa
 ```
+### 02_run_quast.job
+Look at the metrics for you two haplotypes and make sure that the estimates sizes of each haplotype are similar. One will be larger than the other - that's fine. This will give you your first look at scaffold N50, number of scaffolds, L50, etc.
+
+### 03_jellyfish.job
 Make K-mer plots - estimated genome size (genomescope2), heterozyg, and duplication rates. Check that the haplotypes made are of simialr size and have similar numbers of contigs/N50, etc. 
 
 [Genomescope plots link](http://genomescope.org/genomescope2.0/analysis.php?code=yR2k1uRZyKFHM3er60Og)
 
-Quast - py script to run on the assembly - gives N50, bases, etc
-BUSCO - against the bird dataset - see duplications, completeness with the genes
 
-    -------------------------------------------------------------------------------------------
-    |Results from Haplotype1 aves_odb10                                                        |
-    -------------------------------------------------------------------------------------------
-    |C:95.0%[S:94.7%,D:0.3%],F:0.1%,M:4.9%,n:8338,E:10.7%                                      |
-    |7925    Complete BUSCOs (C)    (of which 846 contain internal stop codons)                |
-    |7897    Complete and single-copy BUSCOs (S)                                               |
-    |28    Complete and duplicated BUSCOs (D)                                                  |
-    |8    Fragmented BUSCOs (F)                                                                |
-    |405    Missing BUSCOs (M)                                                                 |
-    |8338    Total BUSCO groups searched                                                       |
-    -------------------------------------------------------------------------------------------
-    
-    -------------------------------------------------------------------------------------------
-    |Results from dataset Hap2_newHiC aves_odb10                                                           |
-    -------------------------------------------------------------------------------------------
-    |C:95.0%[S:94.7%,D:0.3%],F:0.1%,M:4.9%,n:8338,E:10.7%                                      |
-    |7925    Complete BUSCOs (C)    (of which 845 contain internal stop codons)                |
-    |7897    Complete and single-copy BUSCOs (S)                                               |
-    |28    Complete and duplicated BUSCOs (D)                                                  |
-    |8    Fragmented BUSCOs (F)                                                                |
-    |405    Missing BUSCOs (M)                                                                 |
-    |8338    Total BUSCO groups searched                                                       |
-    -------------------------------------------------------------------------------------------
+### 07_run_busco.job
+Yes, the numbering is out of order, but you can also run BUSCO now (you will run it later too) on your two haplotypes to make sure everything looks good. You can download different BUSCO gene sets. For songbirds, make sure to use the passeriformes set, not the aves set. 
 
-    -------------------------------------------------------------------------------------------
-    |Results from Haplotype2 aves_odb10                                                        |
-    -------------------------------------------------------------------------------------------
-    |C:99.5%[S:99.1%,D:0.4%],F:0.0%,M:0.5%,n:8338,E:10.4%                                      |
-    |8293    Complete BUSCOs (C)    (of which 866 contain internal stop codons)                |
-    |8261    Complete and single-copy BUSCOs (S)                                               |
-    |32    Complete and duplicated BUSCOs (D)                                                  |
-    |1    Fragmented BUSCOs (F)                                                                |
-    |44    Missing BUSCOs (M)                                                                  |
-    |8338    Total BUSCO groups searched                                                       |
-    -------------------------------------------------------------------------------------------
-
-        -------------------------------------------------------------------------------------------
-    |Results from dataset Hap1_allHiC aves_odb10                                                           |
-    -------------------------------------------------------------------------------------------
-    |C:99.5%[S:99.1%,D:0.4%],F:0.0%,M:0.5%,n:8338,E:10.4%                                      |
-    |8294    Complete BUSCOs (C)    (of which 866 contain internal stop codons)                |
-    |8264    Complete and single-copy BUSCOs (S)                                               |
-    |30    Complete and duplicated BUSCOs (D)                                                  |
-    |1    Fragmented BUSCOs (F)                                                                |
-    |43    Missing BUSCOs (M)                                                                  |
-    |8338    Total BUSCO groups searched                                                       |
-    -------------------------------------------------------------------------------------------
 ## Hi-C scaffolding
 
-Align the Hi-C data to the contigs (chromap - map Hi-C short reads). Output the bed. Include the -q 0 option to have all the contacts, not just the high quality ones. This is used as the input for yahs. Run yahs to get the scaffolds now (your contig/scaffold number will decrease now that you have scaffolded, particularly for haplotype1). Yahs uses Hi-C and will introduce gaps (Ns) into your files. It starts the manual curation process so that you don't have to do as much in the  later steps. 
+### 04_chromap_index.job and 05_run_chromap.job
+NOTE: the 05_run_chromap.job includes the indexing, so you don't have to run 04 first to index anymore. 
+
+Align the Hi-C data to the contigs (chromap - map Hi-C short reads). Output the _pairs_ file, NOT the bed file. Include the -q 0 option to have all the contacts, not just the high quality ones. This is used as the input for yahs. 
+
+### 06_run_yahs.job
+Run yahs to get the scaffolds now (your contig/scaffold number will decrease now that you have scaffolded, particularly for haplotype1). Yahs uses Hi-C and will introduce gaps (Ns) into your files. It starts the manual curation process so that you don't have to do as much in the  later steps. 
 
 Make your unaligned crams for each lane
 ```
@@ -106,17 +76,28 @@ To merge the cram files:
 ```
 samtools cat -o HiC_merged_HOLA.cram HiC_L1_unaligned.cram HiC_L2_unaligned.cram HiC_L3_unaligned.cram
 ```
+### 08_run_juicer.job
+**Juicer** - creates contact maps plots for looking at genomes. A little easier and faster to run that starting with curation pretext
 
-**Juicer** - creates contact maps plots for looking at genomes
+### 09_run_fcs_gx.job
+*This is the job I could not get to run on the cluster and had to run on Galaxy instead.*
 
 **FCS-gx** (from NCBI) - will look for contamination sequences in your assembly (will also look for mt genome as well as species that are not your study species). And remove any mt contigs because you'll assemble that later, and flag NUMTs. You can add it back in after curation. 
 
-**Curation pretext** (from Sanger - a nextflow pipeline) This is the program that requires having a computer mouse. 
-Give it both assemblies (cat one fasta haplo onto the other haplo)
-You've run yahs, you've removed contamination already. This will create all the tracts you will need for manual curation. Use the DToL naming system. So something like bEreAlp1 for bird, species name, and 1 for the first assembly. (or 2 because this is the second assembly!
-This will generate gaps, repeat files, telemere file, and all the other files needed for manual curation. 
+### 10_run_curpretext.job
+**Curation pretext** (from Sanger - a nextflow pipeline) 
 
-For manual curation, you can now curate both haplos at the same time. 
+For manual curation, you can now curate both haplos at the same time. They should be interleaved together so that the fasta files go scaffold1_hap1, scaffold2_hap2, etc etc. 
+Give it both assemblies: cat one fasta haplo onto the other fasta haplotype:
+```
+awk '/^>/{ count[$0]++ if(count[$0]==1) print $0 "_hap1" else print $0 "_hap2" next } {print}' HOLA_hap1_hap2_test_scaffolds_final.fa > HOLA_hap1_hap2_renamed.fa
+```
+
+You've run yahs and you've removed contamination already. CurationPretext will create all the tracts you will need for manual curation, which is using PretextView on your personal computer. 
+
+Use the DToL naming system for CurationPretext. For a bird, use the prefix of 'b', then scientific species name, abreviated. So, something like bEreAlp1 for bird, species name, and 1 for the first assembly. (Or 2 because this is the second assembly!)
+
+This will generate gaps, repeat files, telemere file, and all the other files needed for manual curation. 
 
 Curation pretext using HiFi in fasta format:
 Take bams and turn them into fasta
@@ -125,28 +106,40 @@ samtools fasta -@8 input.hifi_reads.bam | gzip > HOLA003_hifi.fasta.gz
 ```
 And takes the Hi-C in cram format (and needs the indexed crai as well).
 
+## Manual Curation
+### Manual curation is done on a personal computer using PretextViewAI. 
+_NOTE: I do not use any of the AI features of this program when manually curating a genome_
 
-## Sex chromosomes
-Use the same cat'd haplos for running nucmer. Also rename the reference species' chromosomes so that they look nice and clean (1, 2, Z, etc). Query is haplotypes. Reference is reference. 
-Run some nucmer alignments from the yahs to identify the sex chromosomes (use, potentially, synteny from the zebra finch). Z chrom can be easy (use coverge tracks), but W will likely be super fragmented because it is chock full of repeats. For nucmer, do zebra finch, gallus, BARS, GRTI, and HOSP for HOLA. And potentially also run one with the existing HOLA reference. 
-nucmer -p genome_aligning_to merged haplo 
-Gives you delta file, and use as input for py script (dot script). Takes delta and makes new .coords file. Gives .coords and coords.idx. Go to dot.sandbox.bio. Load your coords and coords.idx into the website. 
-
-**MicroFinder** script for birds. Uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
+There are several [good tutorials online]([url](https://curation.tol.sanger.ac.uk/)) for curating a genome. It is recommended to use a mouse when manually curating, but you can just use your trackpad and keyboard as well. There is a document with keyboard shortcuts available in the code folder as well. 
 
 For an experienced curator, manual curation can take 3 days. An unexperienced curator might take ... a month. :) 
 
 
-**Mitochondrial**
-mitoHiFi for finding the mt genome!
+## Sex chromosomes
+### run_nucmer.job
+Use the same cat'd haplos for running nucmer. Also rename the reference species' chromosomes so that they look nice and clean (1, 2, Z, etc). Query is haplotypes. Reference is reference. 
+Run some nucmer alignments from the yahs output to identify the sex chromosomes (use, potentially, synteny from the zebra finch). Z chromosome can be easy (use coverge tracks), but W will may be super fragmented because it is chock full of repeats. For nucmer, do zebra finch, Gallus gallus (chicken), Barn Swallow, Great Tit, and House Sparrow for the Horned Lark genome. And also run one with the existing Horned Lark reference (scaffold level, highly fragmented).
+```
+nucmer -p genome_aligning_to merged_haplo 
+```
+Nucmer will give you the delta file, and use as input for py script (dot script). It takes the delta and makes new .coords and a coords.idx file. Go to dot.sandbox.bio. Load your coords and coords.idx into the website. Voila - look at your dot plot synteny comparison between the two species!
 
+### 11_run_microfinder.job
+**MicroFinder** This is a script for fishing out microchromosomes in bird genomes. It uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
+
+
+### 12_run_mitoHiFi.job
+**Mitochondrial Genome**
+mitoHiFi for finding the mt genome! Download your species' mt genome from NCBI (if available), or a closely related species. This program looks for circularized reads in your raw HiFi data to fish out the mitochondrial genome. Given the use of long reads, sometimes this means you have a more complete mt genome, and occasionally you see mt genomes with tandem repeats. 
 
 
 ## Annotation
-Braker4 for doing the rna seq annotations. Test it on the test data?
-Repeat annotation - earl grey - 
+Braker4 for doing the rna seq annotations.
 
+## Repeats and Transposable Elements
+Use EarlGrey for annotating TEs and repeats in your genome. I have used a custom repeat library from some unpublished work, but you can use dfam 4, or whatever Josie used for the King Penguin Genome. 
 
+### This is the raw data from my mRNA seq data
 Sample |	Raw reads |	Raw data	| Effective(%)	| Error(%)	| Q20(%) | Q30(%) | GC(%)
 --- | --- | --- | --- | --- | --- | --- | --- |
 HOLA_Ovary	| 85245630	| 12.8	| 96.67	| 0.01	| 99.07	| 96.19	| 46.74
