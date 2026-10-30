@@ -84,6 +84,9 @@ samtools cat -o HiC_merged_HOLA.cram HiC_L1_unaligned.cram HiC_L2_unaligned.cram
 
 **FCS-gx** (from NCBI) - will look for contamination sequences in your assembly (will also look for mt genome as well as species that are not your study species). And remove any mt contigs because you'll assemble that later, and flag NUMTs. You can add it back in after curation. 
 
+### Recommended intermediate step
+At this stage, you should run Nucmer and its associated dot.py script to look at synteny with other species. This will help with understanding how your current scaffolds align with other published genomes' chromosomes. The information for this is at the bottom under Sex Chromosomes. 
+
 ### 10_run_curpretext.job
 **Curation pretext** (from Sanger - a nextflow pipeline) 
 
@@ -110,10 +113,16 @@ And takes the Hi-C in cram format (and needs the indexed crai as well).
 ### Manual curation is done on a personal computer using PretextViewAI. 
 _NOTE: I do not use any of the AI features of this program when manually curating a genome_
 
-There are several [good tutorials online]([url](https://curation.tol.sanger.ac.uk/)) for curating a genome. It is recommended to use a mouse when manually curating, but you can just use your trackpad and keyboard as well. There is a document with keyboard shortcuts available in the code folder as well. 
+There are several good tutorials online (see here: https://curation.tol.sanger.ac.uk/) for curating a genome. It is recommended to use a mouse when manually curating, but you can just use your trackpad and keyboard as well. There is a document with keyboard shortcuts available in the code folder as well. 
 
 For an experienced curator, manual curation can take 3 days. An unexperienced curator might take ... a month. :) 
 
+Manual curation is largely an art. The shortcuts document and some of the tutorials will get you started. When you think you are done with the first pass on the genome, you can now paint your chromosomes and mark the haplotypes. To do this, you will be using the scaffold edit mode to paint chromosomes (s on the keyboard) and metadata mode to make hap1 and hap2 (m on the keyboard). You can cycle through the options for each of these using the arrow keys. Remember to always check that telomeres are not present in the middle of a chromosome by showing the telomere track (x on the key board, then t. Then press x again to edit the menu). 
+When you are ready to finalize your genome, you can go into the main menu (esc key) and press generate AGP. Check the box for format singletons and preserve order. You can now go back to the cluster, where your fasta files live, and use the command line prompt to make your new curated fasta files by running **13_pretext_to_asm.job**. 
+
+After you have finalized your haplotypes and run pretext-to-asm, now you will _re-run CurationPretext_ on each of your haplotypes separately and go through manual curation one more time. This additional curation step ensures that you have not misplaced any remaining scaffolds on one haplotype that should be instead on the other haplotype. It also helps with placing any additional scaffolds into chromosomes. You should also run Nucmer again to make sure that your chromosomes are aligning with other published genomes. You can never run too many syntenies. :) 
+
+A optional step is to _just_ run the microchormosomes and unplaced scaffolds through CurationPretext. This step may be useful if you have many (hundreds) of unplaced scaffolds. While I did do this for Horned Lark, it proved to not be particularly useful as the vast majority of the genome was already placed into chromosomes with a high level of confidence. There is a tutorial on the Sanger website (and/or youtube) that talks about doing this. 
 
 ## Sex chromosomes
 ### run_nucmer.job
@@ -122,7 +131,12 @@ Run some nucmer alignments from the yahs output to identify the sex chromosomes 
 ```
 nucmer -p genome_aligning_to merged_haplo 
 ```
-Nucmer will give you the delta file, and use as input for py script (dot script). It takes the delta and makes new .coords and a coords.idx file. Go to dot.sandbox.bio. Load your coords and coords.idx into the website. Voila - look at your dot plot synteny comparison between the two species!
+Nucmer will give you the delta file, and use as input for py script (dot script). 
+```
+./DotPrep.py --delta code/HOLA-genoscape/nucmer/curatedHOLAhap2_zefi.delta --out curatedHOLAhap2_zefi
+```
+
+It takes the delta and makes new .coords and a coords.idx file. Go to dot.sandbox.bio. Load your coords and coords.idx into the website. Voila - look at your dot plot synteny comparison between the two species!
 
 ### 11_run_microfinder.job
 **MicroFinder** This is a script for fishing out microchromosomes in bird genomes. It uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
