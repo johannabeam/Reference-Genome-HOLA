@@ -77,7 +77,7 @@ To merge the cram files:
 samtools cat -o HiC_merged_HOLA.cram HiC_L1_unaligned.cram HiC_L2_unaligned.cram HiC_L3_unaligned.cram
 ```
 ### 08_run_juicer.job
-**Juicer** - creates contact maps plots for looking at genomes. A little easier and faster to run that starting with curation pretext
+**Juicer** - creates contact maps plots for looking at genomes. A little easier and faster to run than starting with curation pretext. It's helpful to make sure your HiC contact map looks good enough to move on to CurationPretext.
 
 ### 09_run_fcs_gx.job
 *This is the job I could not get to run on the cluster and had to run on Galaxy instead.*
