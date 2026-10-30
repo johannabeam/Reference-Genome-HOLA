@@ -139,16 +139,19 @@ Nucmer will give you the delta file, and use as input for py script (dot script)
 It takes the delta and makes new .coords and a coords.idx file. Go to dot.sandbox.bio. Load your coords and coords.idx into the website. Voila - look at your dot plot synteny comparison between the two species!
 
 ### 11_run_microfinder.job
-**MicroFinder** This is a script for fishing out microchromosomes in bird genomes. It uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
+**MicroFinder** 
+
+This is a script for fishing out microchromosomes in bird genomes. It uses miniprot to find genes. Set aside scaffolds that don't have genes and look them later. Your fasta file will be ordered by genes and size (top left for potential micros). 
 
 
 ### 12_run_mitoHiFi.job
 **Mitochondrial Genome**
+
 mitoHiFi for finding the mt genome! Download your species' mt genome from NCBI (if available), or a closely related species. This program looks for circularized reads in your raw HiFi data to fish out the mitochondrial genome. Given the use of long reads, sometimes this means you have a more complete mt genome, and occasionally you see mt genomes with tandem repeats. 
 
 
 ## Annotation
-Braker4 for doing the rna seq annotations.
+Braker4 for doing the rna seq annotations. The better, recommended option is to see if NCBI will annotate your genome for you as it will be the official RefSeq annotation regardless. There is not really a reason to do it yourself unless you want to waste some time. 
 
 ## Repeats and Transposable Elements
 Use EarlGrey for annotating TEs and repeats in your genome. I have used a custom repeat library from some unpublished work, but you can use dfam 4, or whatever Josie used for the King Penguin Genome. 
