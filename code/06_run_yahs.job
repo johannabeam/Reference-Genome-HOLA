@@ -1,0 +1,30 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=yahs_HOLA_hap2_all
+#SBATCH --output=/code/HOLA-genoscape/yahs/yahs_HOLA_hap2_all_test.out
+#SBATCH --error=/code/HOLA-genoscape/yahs/yahs_HOLA_hap2_all_test.err
+
+module load miniforge
+mamba activate assembly
+
+export HAP_DIR=/HOLA/assembly/assemb_allHiC
+export BED_DIR=/HOLA/assembly/assemb_allHiC/chromap
+export OUTPUT_DIR=/HOLA/assembly/assemb_allHiC/yahs
+mkdir -p $OUTPUT_DIR
+
+/code/yahs/yahs \
+    $HAP_DIR/HOLA_hap2.fa \
+    --file-type PA5 \
+    $BED_DIR/HOLA_hap2_hic.pairs \
+    -o $OUTPUT_DIR/HOLA_hap2_test \
+    -e GATC
+    

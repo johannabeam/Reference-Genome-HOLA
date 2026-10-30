@@ -1,0 +1,31 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=busco_HOLA_hap1_final
+#SBATCH --output=/code/HOLA-genoscape/busco/busco_HOLA_hap1_final.out
+#SBATCH --error=/code/HOLA-genoscape/busco/busco_HOLA_hap1_final.err
+
+module load miniforge
+mamba activate busco
+
+export _JAVA_OPTIONS="-Xmx54g"
+
+export HAP_DIR=/code/HOLA-genoscape/curpretext
+export OUTPUT_DIR=/HOLA/assembly/assemb_allHiC/busco
+mkdir -p $OUTPUT_DIR
+
+busco -i $HAP_DIR/bEreAlp2_v5_2209.hap1.1.primary.curated.fa \
+-m genome \
+-l /code/HOLA-genoscape/busco_downloads/lineages/passeriformes_odb12.2 \
+-c 16 \
+-f \
+--out_path $OUTPUT_DIR \
+-o HOLA_hap1_busco_final

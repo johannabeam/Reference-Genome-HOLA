@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=chromap_HOLA_hap2_index
+#SBATCH --output=/code/HOLA-genoscape/chromap_HOLA_hap2_idx.out
+#SBATCH --error=/code/HOLA-genoscape/chromap_HOLA_hap2_idx.err
+
+module load miniforge
+mamba activate assembly
+
+
+export HAP_DIR=/HOLA/assembly
+
+chromap -i -r $HAP_DIR/HOLA_hap2.fa -o $HAP_DIR/chromap/HOLA_hap2.index

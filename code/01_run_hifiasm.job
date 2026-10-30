@@ -1,0 +1,33 @@
+#!/bin/bash
+#SBATCH --get-user-env
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=235G
+#SBATCH --time=39:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-long
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=hifiasm_HOLA
+#SBATCH --output=/HOLA-genoscape/HOLA_hifiasm.out
+#SBATCH --error=/HOLA-genoscape/HOLA_hifiasm.err
+
+eval "$(conda shell.bash hook)"
+module load miniforge
+mamba activate assembly
+
+export RAW_HiC=/ref_raw_data/clean_data/HOLA_001
+export RAW_UL=/ref_raw_data/Data-X202SC26024927-Z02-F001/HOLA002/HOLA002_fastq_pass
+export RAW_PB=/ref_raw_data/rawdata/Data-X202SC26024927-Z01-F001/HOLA003/Sequel-Revio/FPAC260157265-1A
+
+export OUTPUT_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly
+
+mkdir -p $OUTPUT_DIR
+
+hifiasm -o $OUTPUT_DIR/HOLA001.asm -t 32 \
+    --h1 $RAW_HiC/HOLA_001_L1_1.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L2_1.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L3_1.clean.rd.fq.gz \
+    --h2 $RAW_HiC/HOLA_001_L1_2.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L2_2.clean.rd.fq.gz,$RAW_HiC/HOLA_001_L3_2.clean.rd.fq.gz \
+    --ul $RAW_UL/HOLA_002.fastq.gz \
+    $RAW_PB/HOLA003.hifi_reads.bam

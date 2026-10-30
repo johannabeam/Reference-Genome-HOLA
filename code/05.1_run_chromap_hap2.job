@@ -1,0 +1,37 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=04:00:00
+#SBATCH -p amilan
+#SBATCH --qos=normal
+#SBATCH --account=csu116_alpine1
+#SBATCH --mail-type=end
+#SBATCH --mail-user=c838062464@colostate.edu
+#SBATCH --job-name=chromap_HOLA_hap2_raw_run2
+#SBATCH --output=/projects/c838062464@colostate.edu/code/HOLA-genoscape/chromap/chromap_HOLA_hap2_raw_run2.out
+#SBATCH --error=/projects/c838062464@colostate.edu/code/HOLA-genoscape/chromap/chromap_HOLA_hap2_raw_run2.err
+
+module load miniforge
+mamba activate assembly
+
+export RAW_HiC=/scratch/alpine/c838062464@colostate.edu/HOLA/ref_raw_data/HiC_mkII/raw_data/HOLA_001
+export HAP_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/assemb_allHiC
+export OUTPUT_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/assemb_allHiC/chromap
+mkdir -p $OUTPUT_DIR
+chromap -i \
+    -r $HAP_DIR/HOLA_hap2.fa \
+    -o $OUTPUT_DIR/HOLA_hap2.index \
+    -t 16
+
+chromap --preset hic \
+    -r $HAP_DIR/HOLA_hap2.fa \
+    -x $OUTPUT_DIR/HOLA_hap2.index \
+    -1 $RAW_HiC/HOLA_001_L1_1.fq.gz,$RAW_HiC/HOLA_001_L2_1.fq.gz,$RAW_HiC/HOLA_001_L3_1.fq.gz,$RAW_HiC/HOLA_001_L4_1.fq.gz,$RAW_HiC/HOLA_001_L5_1.fq.gz \
+    -2 $RAW_HiC/HOLA_001_L1_2.fq.gz,$RAW_HiC/HOLA_001_L2_2.fq.gz,$RAW_HiC/HOLA_001_L3_2.fq.gz,$RAW_HiC/HOLA_001_L4_2.fq.gz,$RAW_HiC/HOLA_001_L5_2.fq.gz \
+    -q 0 \
+    --pairs \
+    -o $OUTPUT_DIR/HOLA_hap2_hic.pairs \
+    -t 16 \
+    --summary $OUTPUT_DIR/HOLA_hap2_hic_summary.txt

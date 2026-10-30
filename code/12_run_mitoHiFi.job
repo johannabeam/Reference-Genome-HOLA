@@ -1,0 +1,39 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=mitohifi
+#SBATCH --output=/code/HOLA-genoscape/mitofinder/mitohifi.out
+#SBATCH --error=/code/HOLA-genoscape/mitofinder/mitohifi.err
+
+module load singularity/3.7.4
+module load miniforge
+conda activate mitohifi_env
+
+export SINGULARITY_CACHEDIR=/scratch/alpine/USER/singularity_cache
+export WORK_DIR=/code/HOLA-genoscape/mitofinder
+export OUTDIR=/HOLA/assembly/mitofinder
+export SIF=/code/HOLA-genoscape/mitofinder/mitohifi_master.sif
+export HIFI=/HOLA/assembly/curationpretext/remaining_scaffolds/hifi_fasta
+export MITO=/HOLA/assembly/mitofinder/bEreAlp2
+
+
+
+mkdir -p $OUTDIR
+cd $OUTDIR
+
+singularity exec \
+    -B /scratch/alpine/USER:/scratch/alpine/USER \
+    -B /projects/USER:/projects/USER \
+    $SIF python3 $WORK_DIR/MitoHiFi/src/mitohifi.py \
+    -r $HIFI/HOLA003_hifi.fasta.gz \
+    -f $MITO/HOLA_mitochondria_NC_048470.fasta \
+    -g $MITO/HOLA_mito_ref.gb \
+    -t 8

@@ -1,0 +1,51 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=256G
+#SBATCH --time=24:00:00
+#SBATCH -p amem
+#SBATCH --qos=mem-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=curationpretext
+#SBATCH --output=/code/HOLA-genoscape/curpretext/curationpretext_reordered.out
+#SBATCH --error=/code/HOLA-genoscape/curpretext/curationpretext_reordered.err
+
+module load nextflow/25.10.2
+module load singularity/3.7.4
+module load miniforge
+source activate assembly
+export JAVA_CMD=/curc/sw/install/bio/nextflow/25.10.2_env/bin/java
+export JAVA_HOME=/curc/sw/install/bio/nextflow/25.10.2_env
+unset _JAVA_OPTIONS
+
+export NXF_SINGULARITY_CACHEDIR=/scratch/alpine/c838062464@colostate.edu/singularity_cache
+mkdir -p $NXF_SINGULARITY_CACHEDIR
+export SINGULARITY_CACHEDIR=/scratch/alpine/c838062464@colostate.edu/singularity_cache
+
+# ---- Paths ----
+export RAW_HiC=/HOLA/ref_raw_data/HiC_mkII/raw_data/HOLA_001
+export HIFI_DIR=/HOLA/ref_raw_data/rawdata/Data-X202SC26024927-Z01-F001/HOLA003/Sequel-Revio/FPAC260157265-1A
+export WORK_DIR=/HOLA/assembly/curationpretext
+export CRAM_DIR=$WORK_DIR/cram
+export FASTA_OUT=$WORK_DIR/hifi_fasta
+export ASSEMBLY=$WORK_DIR/HOLA_hap1_hap2_reordered.fa
+export OUTDIR=$WORK_DIR/results_reordered
+mkdir -p $OUTDIR
+
+# ---- Run curationpretext (full pipeline) ----
+nextflow run sanger-tol/curationpretext \
+    -r 1.5.1 \
+    -resume \
+    --input $ASSEMBLY \
+    --cram $CRAM_DIR \
+    --reads $FASTA_OUT \
+    --read_type hifi \
+    --sample bEreAlp2 \
+    --teloseq TTAGGG \
+    --outdir $OUTDIR \
+    --all_output true \
+    -c alpine.config \
+    -profile singularity

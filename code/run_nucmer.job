@@ -1,0 +1,19 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=20G
+#SBATCH --time=4:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=nucmer_curatedHOLAhap1_zefi
+#SBATCH --output=/code/HOLA-genoscape/nucmer/curatedHOLAhap2_zefi.out
+#SBATCH --error=/code/HOLA-genoscape/nucmer/curatedHOLAhap2_zefi.err
+
+module load miniforge
+mamba activate synteny
+
+nucmer -p curatedHOLAhap2_zefi /PATH/TO/FASTA/draft_bEreAlp2_v4_0709.hap2.1.primary.curated.fa /PATH/TO/FASTA/GCF_048771995.1_bTaeGut7.mat_genomic.fna

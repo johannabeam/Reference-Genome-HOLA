@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=256G
+#SBATCH --time=12:00:00
+#SBATCH -p amem
+#SBATCH --qos=mem-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=juicer_HOLA_hap1_scaffolded_all
+#SBATCH --output=/code/HOLA-genoscape/juicer_HOLA_hap1_scaffolded_all_test.out
+#SBATCH --error=/code/HOLA-genoscape/juicer_HOLA_hap1_scaffolded_all_test.err
+
+export YAHS_DIR=/HOLA/assembly/assemb_allHiC/yahs
+export AGP=/assembly/assemb_allHiC/yahs/HOLA_hap1_test_scaffolds_final.agp 
+export FA_DIR=/HOLA/assembly/assemb_allHiC
+export SD2=/code
+export SD1=/code/yahs
+
+cd $YAHS_DIR
+$SD1/juicer pre -o out_JBAT $YAHS_DIR/HOLA_hap1_test.bin $AGP $FA_DIR/HOLA_hap1.fa.fai > out_JBAT.log 2>&1
+
+sort -k2,2d -k6,6d -T $YAHS_DIR --parallel=8 -S32G $YAHS_DIR/out_JBAT.txt \
+    > $YAHS_DIR/out_JBAT_sorted.txt
+
+(java -jar -Xmx200G $SD2/juicer_tools.2.20.00.jar pre -n $YAHS_DIR/out_JBAT_sorted.txt $YAHS_DIR/out_JBAT.hic.part <(cat $YAHS_DIR/out_JBAT.log | grep PRE_C_SIZE | awk '{print $2" "$3}')) && (mv $YAHS_DIR/out_JBAT.hic.part $YAHS_DIR/out_JBAT.hic)

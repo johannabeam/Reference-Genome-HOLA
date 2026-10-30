@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p amilan
+#SBATCH --qos=normal
+#SBATCH --account=csu116_alpine1
+#SBATCH --mail-type=end
+#SBATCH --mail-user=c838062464@colostate.edu
+#SBATCH --job-name=yahs_HOLA_hap2_all
+#SBATCH --output=/projects/c838062464@colostate.edu/code/HOLA-genoscape/yahs/yahs_HOLA_hap2_all.out
+#SBATCH --error=/projects/c838062464@colostate.edu/code/HOLA-genoscape/yahs/yahs_HOLA_hap2_all.err
+
+module load miniforge
+mamba activate assembly
+export HAP_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/assemb_allHiC
+export BED_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/assemb_allHiC/chromap
+export OUTPUT_DIR=/scratch/alpine/c838062464@colostate.edu/HOLA/assembly/assemb_allHiC/yahs
+mkdir -p $OUTPUT_DIR
+
+/projects/c838062464@colostate.edu/code/yahs/yahs $HAP_DIR/HOLA_hap2.fa $BED_DIR/HOLA_hap2_hic.bed -o $OUTPUT_DIR/HOLA_hap2

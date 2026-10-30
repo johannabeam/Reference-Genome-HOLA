@@ -1,0 +1,29 @@
+#!/bin/bash
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=64G
+#SBATCH --time=12:00:00
+#SBATCH -p acpu
+#SBATCH --qos=cpu-normal
+#SBATCH --account=XXXXX
+#SBATCH --mail-type=end
+#SBATCH --mail-user=XXXXX
+#SBATCH --job-name=microfinder
+#SBATCH --output=/code/HOLA-genoscape/microfinder/microfinder.out
+#SBATCH --error=/code/HOLA-genoscape/microfinder/microfinder.err
+
+module load singularity/3.7.4
+
+export SINGULARITY_CACHEDIR=/singularity_cache
+
+# ---- Paths ----
+export ASSEMBLY=/HOLA/assembly/curationpretext/HOLA_hap1_hap2_interleaved.fa
+export OUTDIR=/HOLA/assembly/microfinder/results
+mkdir -p $OUTDIR
+
+singularity exec \
+    -B $(dirname $ASSEMBLY):/input \
+    -B $OUTDIR:/output \
+    docker://ghcr.io/sanger-tol/microfinder:main \
+    /usr/src/app/MicroFinder.v0.2.sh /input/HOLA_hap1_hap2_interleaved.fa 5000000
